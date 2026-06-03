@@ -21,6 +21,8 @@ return new class extends Migration
                 $table->timestamp('executed_at')->useCurrent();
 
                 $table->timestamps();
+                $table->index('maker_order_id');
+                $table->index('taker_order_id');
             });
         }
     }

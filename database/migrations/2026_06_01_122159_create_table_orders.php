@@ -15,6 +15,7 @@ return new class extends Migration
             Schema::create('orders', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+                $table->uuid('client_order_id')->unique();
                 $table->string('symbol', 20);
                 $table->enum('side', ['BUY', 'SELL']);
                 $table->enum('type', ['LIMIT', 'MARKET']);
@@ -24,6 +25,7 @@ return new class extends Migration
                 $table->enum('status', ['OPEN', 'PARTIALLY_FILLED', 'FILLED', 'CANCELED'])->default('OPEN');
 
                 $table->timestamps();
+                $table->index(['trading_pair_id', 'status', 'side', 'price', 'created_at']);
             });
         }
     }
