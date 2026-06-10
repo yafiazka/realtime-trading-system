@@ -7,6 +7,7 @@ use App\Enums\OrderStatusEnum;
 use App\Enums\OrderTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Order extends Model
 {
@@ -34,5 +35,15 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function tradingPair(): BelongsTo
+    {
+        return $this->belongsTo(TradingPair::class);
+    }
+
+    public function ledgerEntries(): MorphMany
+    {
+        return $this->morphMany(LedgerEntry::class, 'reference');
     }
 }
