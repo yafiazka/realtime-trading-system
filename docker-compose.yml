@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: rts-app
+    restart: unless-stopped
+    ports:
+      - "8095:80"
+    volumes:
+      - .:/var/www/html
+      - ./storage:/var/www/html/storage
+      - vendor_data:/var/www/html/vendor
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.containers.internal:host-gateway"
+    environment:
+      APP_URL: http://localhost:8095
+      DB_HOST: global-pgsql
+      DB_PORT: 5432
+      DB_DATABASE: realtime_trading_system
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      REDIS_HOST: global-redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      REDIS_CLIENT: predis
+    networks:
+      rts-network:
+        aliases:
+          - app-service
+      global-db-net:
+
+volumes:
+  vendor_data:
+    driver: local
+
+networks:
+  rts-network:
+    driver: bridge
+  global-db-net:
+    external: true
