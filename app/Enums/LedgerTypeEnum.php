@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum LedgerType: string
+enum LedgerTypeEnum: string
 {
     case DEPOSIT = 'DEPOSIT';
     case LOCK = 'LOCK';

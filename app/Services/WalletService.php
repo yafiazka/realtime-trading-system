@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Classes\OperatorAmount;
-use App\Enums\LedgerType;
+use App\Enums\LedgerTypeEnum;
 use App\Exceptions\InsufficientFundsException;
 use App\Models\Wallet;
 use Illuminate\Support\Facades\DB;
@@ -47,7 +49,7 @@ class WalletService
 
             $this->ledgerService->recordTransaction(
                 wallet: $wallet,
-                type: LedgerType::LOCK,
+                type: LedgerTypeEnum::LOCK,
                 amountChangeBalance: new OperatorAmount('-' . (string) $amountToLock),
                 amountChangeLocked: $amountToLock,
                 referenceType: $referenceType,
@@ -63,7 +65,7 @@ class WalletService
 
             $this->ledgerService->recordTransaction(
                 wallet: $wallet,
-                type: LedgerType::UNLOCK,
+                type: LedgerTypeEnum::UNLOCK,
                 amountChangeBalance: $amountToUnlock,
                 amountChangeLocked: new OperatorAmount('-' . (string) $amountToUnlock),
                 referenceType: $referenceType,
@@ -85,7 +87,7 @@ class WalletService
             $walletSpent = $this->getWalletLocked($userId, $assetSpent);
             $this->ledgerService->recordTransaction(
                 wallet: $walletSpent,
-                type: LedgerType::DEBIT,
+                type: LedgerTypeEnum::DEBIT,
                 amountChangeBalance: new OperatorAmount('0'),
                 amountChangeLocked: new OperatorAmount('-' . (string) $amountSpent),
                 referenceType: $referenceType,
@@ -95,7 +97,7 @@ class WalletService
             $walletReceived = $this->getWalletLocked($userId, $assetReceived);
             $this->ledgerService->recordTransaction(
                 wallet: $walletReceived,
-                type: LedgerType::CREDIT,
+                type: LedgerTypeEnum::CREDIT,
                 amountChangeBalance: $amountReceived,
                 amountChangeLocked: new OperatorAmount('0'),
                 referenceType: $referenceType,

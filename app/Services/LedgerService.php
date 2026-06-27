@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Classes\OperatorAmount;
-use App\Enums\LedgerType;
+use App\Enums\LedgerTypeEnum;
 use App\Models\LedgerEntry;
 use App\Models\Wallet;
 
@@ -11,7 +13,7 @@ class LedgerService
 {
     public function recordTransaction(
         Wallet $wallet,
-        LedgerType $type,
+        LedgerTypeEnum $type,
         OperatorAmount $amountChangeBalance,
         OperatorAmount $amountChangeLocked,
         string $referenceType,
