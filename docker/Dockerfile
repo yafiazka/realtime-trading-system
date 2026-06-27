@@ -16,7 +16,9 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     vim \
-    && rm -rf /var/lib/apt/lists/*
+    supervisor \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /var/log/supervisor
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -46,11 +48,20 @@ RUN a2enmod rewrite
 COPY ./docker/laravel-apache.conf /etc/apache2/sites-available/laravel.conf
 RUN a2ensite laravel.conf && a2dissite 000-default.conf
 
+# Copy Supervisor configs
+COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./docker/supervisor-queue.conf /etc/supervisor/conf.d/supervisor-queue.conf
+COPY ./docker/supervisor-engine.conf /etc/supervisor/conf.d/supervisor-engine.conf
+COPY ./docker/supervisor-reverb.conf /etc/supervisor/conf.d/supervisor-reverb.conf
+
 # Set working directory
 WORKDIR /var/www/html
 
 # Copy application source
 COPY . /var/www/html
+
+# Install PHP dependencies
+RUN composer install --no-interaction --optimize-autoloader
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \

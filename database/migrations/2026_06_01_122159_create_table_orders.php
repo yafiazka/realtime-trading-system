@@ -16,7 +16,7 @@ return new class extends Migration
                 $table->id();
                 $table->foreignId('user_id')->constrained()->cascadeOnDelete();
                 $table->uuid('client_order_id')->unique();
-                $table->string('symbol', 20);
+                $table->foreignId('trading_pair_id')->constrained()->cascadeOnDelete();
                 $table->enum('side', ['BUY', 'SELL']);
                 $table->enum('type', ['LIMIT', 'MARKET']);
                 $table->decimal('price', 18, 8)->nullable();
